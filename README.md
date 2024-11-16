@@ -9,7 +9,7 @@ Este proyecto analiza las tendencias de precios de las acciones de Samsung y App
 - Python 3.8 o superior
 - Instalar dependencias: `pip install -r requirements.txt`
 
-## Estructura
+## Estructura de Archivos `carpetas/`
 
 - `data/`: Datos originales y procesados.
 - `scripts/`: Scripts de análisis y visualización.
