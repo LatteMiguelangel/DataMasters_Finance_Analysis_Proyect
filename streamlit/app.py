@@ -7,6 +7,15 @@ st.set_page_config(
     layout="centered"
 )
 
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+
 #lectura de datasets
 samsung_df = pd.read_csv('data/raw/SSNG.csv', delimiter=',')
 apple_df = pd.read_csv('data/raw/AAPL.csv', delimiter=',')
