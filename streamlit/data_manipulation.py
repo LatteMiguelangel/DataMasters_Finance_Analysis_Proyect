@@ -1,6 +1,12 @@
 import pandas as pd
 import streamlit as st
 
+st.set_page_config(
+    page_title="Samsung vs Apple",
+    page_icon="📊",
+    layout="centered"
+)
+
 #lectura de datasets
 samsung_df = pd.read_csv('data/raw/SSNG.csv', delimiter=',')
 apple_df = pd.read_csv('data/raw/AAPL.csv', delimiter=',')
@@ -42,7 +48,7 @@ won_to_usd_04_22_df.rename(columns={'Date': 'date', 'KRW=X': 'dollar'}, inplace=
 # won_to_usd_00_17_df.set_index('date', inplace=True)
 # won_to_usd_04_22_df.set_index('date', inplace=True)
 
-#mostrar datasets
+
 #print(samsung_df.head())
 #print('\n\n\n-----------------------------------------\n\n')
 #print(apple_df.head())
@@ -73,7 +79,9 @@ samsung_df['low'] = samsung_df.apply(lambda x: float(x['low']) / float(x['usd_to
 samsung_df['close'] = samsung_df.apply(lambda x: float(x['close']) / float(x['usd_to_won']), axis=1)
 samsung_df['adj_close'] = samsung_df.apply(lambda x: float(x['adj_close']) / float(x['usd_to_won']), axis=1)
 
-# crear columna de year ---> samsung_df['year'] = pd.DatetimeIndex(samsung_df['date']).year
+# crear columna de year para ambos datasets
+samsung_df['year'] = pd.DatetimeIndex(samsung_df['date']).year
+apple_df['year'] = pd.DatetimeIndex(apple_df['date']).year
 
 #rangos para evaluar acciones de apple
 date_start = samsung_df['date'].min()
@@ -83,8 +91,16 @@ apple_df = apple_df[(apple_df['date'] >= date_start) & (apple_df['date'] <= date
 
 
 #mostrar df
+st.title("Análisis Financiero: Samsung vs Apple")
+st.write("Previsualización de Samsung:")
 st.dataframe(samsung_df.sort_values('date', ascending=True))
 st.divider()
+st.write("Previsualización de Apple:")
 st.dataframe(apple_df.sort_values('date', ascending=True))
 
-
+# Gráfico interactivo
+# company = st.selectbox("Selecciona una empresa", ["Samsung", "Apple"])
+# if company == "Samsung":
+#     st.line_chart(samsung_df[['year', 'volume']].set_index('year'))
+# else:
+#     st.line_chart(apple_df[['year', 'volume']].set_index('year'))
