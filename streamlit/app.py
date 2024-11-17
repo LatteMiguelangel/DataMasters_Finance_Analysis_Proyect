@@ -11,6 +11,7 @@ hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
+            header {visibility: hidden;}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
@@ -102,10 +103,11 @@ apple_df = apple_df[(apple_df['date'] >= date_start) & (apple_df['date'] <= date
 #mostrar df
 st.title("Análisis Financiero: Samsung vs Apple")
 st.write("Previsualización de Samsung:")
-st.dataframe(samsung_df.sort_values('date', ascending=True))
+
+st.dataframe(samsung_df.sort_values('date', ascending=True).reset_index(drop=True, inplace=False))
 st.divider()
 st.write("Previsualización de Apple:")
-st.dataframe(apple_df.sort_values('date', ascending=True))
+st.dataframe(apple_df.sort_values('date', ascending=True).reset_index(drop=True, inplace=False))
 
 # Gráfico interactivo
 # company = st.selectbox("Selecciona una empresa", ["Samsung", "Apple"])
