@@ -11,14 +11,14 @@ Este proyecto analiza las tendencias de precios de las acciones de Samsung y App
 
 ## Estructura de Archivos `carpetas/`
 
-- `data/`: Datos originales y procesados.
+- `data/`: Datos originales y procesados (NO TOCAR).
 - `scripts/`: Scripts de análisis y visualización.
 - `streamlit/`: Aplicación interactiva.
-- `notebooks/`: Notebooks para exploración de datos.
+- `notebooks/`: Notebooks para exploración de datos y pruebas.
 
 ## Ejecución
 
 1. Procesar datos:
    ```bash
-   python scripts/data_preprocessing.py
+   streamlit run streamlit/app.py
    ```
