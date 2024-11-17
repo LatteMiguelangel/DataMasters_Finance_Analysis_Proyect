@@ -9,8 +9,10 @@ def load_data(filepath):
 st.title("Análisis Financiero: Samsung vs Apple")
 
 # Cargar datasets procesados
-samsung_df = load_data('./data/processed/samsung_cleaned.csv')
-apple_df = load_data('./data/processed/apple_cleaned.csv')
+#samsung_df = load_data('./data/processed/samsung_cleaned.csv')
+#apple_df = load_data('./data/processed/apple_cleaned.csv')
+samsung_df = pd.read_csv('./data/raw/SSNG.csv', delimiter=';')
+apple_df = pd.read_csv('./data/raw/AAPL.csv', delimiter=',')
 
 # Mostrar datos
 st.write("Previsualización de Samsung:")
