@@ -102,12 +102,20 @@ apple_df = apple_df[(apple_df['date'] >= date_start) & (apple_df['date'] <= date
 
 #mostrar df
 st.title("Análisis Financiero: Samsung vs Apple")
-st.write("Previsualización de Samsung:")
-
+st.write("""
+### Samsung Dataset
+Esta tabla contiene las acciones de **Samsung** convertidas a dólares del **2000 al 2022**.
+""")
 st.dataframe(samsung_df.sort_values('date', ascending=True).reset_index(drop=True, inplace=False))
 st.divider()
-st.write("Previsualización de Apple:")
+st.write("""
+### Apple Dataset
+Esta tabla contiene las acciones de **Apple** convertidas a dólares del **2000 al 2022**.
+""")
 st.dataframe(apple_df.sort_values('date', ascending=True).reset_index(drop=True, inplace=False))
+
+
+
 
 # Gráfico interactivo
 # company = st.selectbox("Selecciona una empresa", ["Samsung", "Apple"])
