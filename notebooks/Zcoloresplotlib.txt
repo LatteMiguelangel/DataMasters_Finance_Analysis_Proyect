@@ -1,0 +1,35 @@
+Colores en Plotly
+Puedes usar colores en formato de nombre, hexadecimal, o RGB. Aquí tienes algunas opciones comunes:
+
+Nombres de colores:
+red
+green
+blue
+orange
+purple
+yellow
+cyan
+magenta
+black
+white
+gray
+
+Colores Hexadecimales:
+#FF0000 (Rojo)
+#008000 (Verde)
+#0000FF (Azul)
+#FFA500 (Naranja)
+#800080 (Púrpura)
+#FFFF00 (Amarillo)
+#00FFFF (Cian)
+#FF00FF (Magenta)
+#000000 (Negro)
+#FFFFFF (Blanco)
+#808080 (Gris)
+
+Colores RGB:
+rgb(255, 0, 0) (Rojo)
+rgb(0, 128, 0) (Verde)
+rgb(0, 0, 255) (Azul)
+rgb(255, 165, 0) (Naranja)
+rgb(128, 0, 128) (Púrpura)

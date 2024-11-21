@@ -16,7 +16,6 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-
 #lectura de datasets
 samsung_df = pd.read_csv('data/raw/SSNG.csv', delimiter=',')
 apple_df = pd.read_csv('data/raw/AAPL.csv', delimiter=',')
