@@ -28,7 +28,7 @@ samsung_df = samsung_df.dropna()
 apple_df = apple_df.dropna()
 won_to_usd_00_17_df = won_to_usd_00_17_df.dropna()
 won_to_usd_04_22_df = won_to_usd_04_22_df.dropna()
-#borrar filas con valores '.'
+
 won_to_usd_00_17_df = won_to_usd_00_17_df[won_to_usd_00_17_df['DEXKOUS'] != '.']
 won_to_usd_04_22_df = won_to_usd_04_22_df[won_to_usd_04_22_df['KRW=X'] != '.']
 
