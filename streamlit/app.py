@@ -184,7 +184,7 @@ for company, data in datasets.items():
     # Crear el heatmap con Seaborn
     fig, ax = plt.subplots(figsize=(8, 6))  # Tamaño ajustable para cada gráfico
     sns.set_style('whitegrid')
-    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', ax=ax)
+    sns.heatmap(correlation_matrix, annot=True, cmap='magma', ax=ax)
     ax.set_title(f'Correlación de variables para {company}')
 
     # Mostrar el gráfico en Streamlit
