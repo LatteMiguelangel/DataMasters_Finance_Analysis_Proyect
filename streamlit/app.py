@@ -4,6 +4,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import seaborn as sns
+import plotly.express as px
 
 st.set_page_config(
     page_title="Data Analysis",
@@ -167,9 +168,8 @@ for company, data in datasets.items():
     st.write(f"Resumen de volatilidad para {company}:\n")
     st.write(data[['daily_range', 'daily_pct_change']].describe())
     
-st.write("""
-        #### Análisis de Correlación de Variables por Compañía
-""")
+st.write("""#### Análisis de Correlación de Variables por Compañía""")
+
 for company, data in datasets.items():
     # Filtrar solo las columnas numéricas
     numeric_data = data.select_dtypes(include='number')
@@ -181,30 +181,46 @@ for company, data in datasets.items():
     # Calcular la matriz de correlación
     correlation_matrix = numeric_data.corr()
 
-    # Crear el heatmap con Seaborn
-    fig, ax = plt.subplots(figsize=(8, 6))  # Tamaño ajustable para cada gráfico
-    sns.set_style('whitegrid')
-    sns.heatmap(correlation_matrix, annot=True, cmap='magma', ax=ax)
-    ax.set_title(f'Correlación de variables para {company}')
+    # Convertir la matriz en un formato largo para Plotly
+    correlation_long = correlation_matrix.reset_index().melt(id_vars='index')
+    correlation_long.columns = ['Variable 1', 'Variable 2', 'Correlación']
 
+    # Crear el heatmap con Plotly
+    fig = px.imshow(
+        correlation_matrix.values,
+        x=correlation_matrix.columns,
+        y=correlation_matrix.index,
+        color_continuous_scale='magma',
+        text_auto='.2f',
+        labels=dict(color='Correlación'),
+        title=f'Matriz de Correlación: {company}',
+    )
+    
+    # Ajustar el diseño
+    fig.update_layout(
+        width=600,
+        height=500,
+        xaxis_title="Variables",
+        yaxis_title="Variables",
+        margin=dict(l=50, r=50, t=50, b=50),
+        font=dict(family="Arial", size=12),
+    )
+    
     # Mostrar el gráfico en Streamlit
     st.subheader(f"Matriz de Correlación: {company}")
-    st.pyplot(fig)
-    
-    combined_data = pd.DataFrame()
+    st.plotly_chart(fig)
 ###################################
 # Encabezado de la aplicación
 st.title("Análisis de Correlación Global entre Empresas")
 
-# Combinar los precios ajustados de cierre en un solo DataFrame
+# Combinar los volúmenes en un solo DataFrame
 st.header("Generando Datos Combinados")
 combined_data = pd.DataFrame()
-combined_data = combined_data.dropna()
 
 for company, data in datasets.items():
     data['date'] = pd.to_datetime(data['date'])
     data = data.set_index('date')  # Asegurar que las fechas sean el índice
-    combined_data[company] = data['volume']  # Agregar la columna adj_close por empresa
+    combined_data[company] = data['volume']  # Agregar la columna 'volume' por empresa
 
 # Mostrar datos combinados si el usuario lo desea
 if st.checkbox("Mostrar datos combinados"):
@@ -216,13 +232,28 @@ combined_data.dropna(inplace=True)
 # Calcular la matriz de correlación
 correlation_matrix = combined_data.corr()
 
-# Visualizar la matriz de correlación
+# Visualizar la matriz de correlación con Plotly
 st.header("Matriz de Correlación entre el Volumen de las Compañías")
-fig, ax = plt.subplots(figsize=(10, 8))
-sns.heatmap(correlation_matrix, annot=True, cmap='magma', fmt=".2f", linewidths=0.5, ax=ax)
-ax.set_title("Matriz de Correlación entre el Volumen de las Compañías", fontsize=16)
 
-# Renderizar la gráfica en Streamlit
-st.pyplot(fig)
+fig = px.imshow(
+    correlation_matrix.values,
+    x=correlation_matrix.columns,
+    y=correlation_matrix.index,
+    color_continuous_scale='magma',
+    text_auto='.2f',
+    labels=dict(color='Correlación'),
+    title="Matriz de Correlación entre el Volumen de las Compañías",
+)
 
+# Personalizar el diseño del gráfico
+fig.update_layout(
+    width=800,
+    height=600,
+    xaxis_title="Compañías",
+    yaxis_title="Compañías",
+    margin=dict(l=50, r=50, t=50, b=50),
+    font=dict(family="Arial", size=12),
+)
 
+# Mostrar la gráfica en Streamlit
+st.plotly_chart(fig)
