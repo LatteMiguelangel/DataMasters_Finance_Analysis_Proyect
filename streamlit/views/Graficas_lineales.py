@@ -67,11 +67,9 @@ def Graficas_lineales(datasets):
     # Mostrar la gráfica en Streamlit
     st.title("Análisis de Precios Anuales Máximos y Mínimos de Empresas Tecnológicas")
     st.plotly_chart(fig)
-
-
-
     fig = go.Figure()
 
+    st.divider()
     # Iterar sobre cada empresa en datasets
     for company, data in datasets.items():
         if 'open' in data.columns and 'close' in data.columns and 'date' in data.columns:
@@ -119,9 +117,9 @@ def Graficas_lineales(datasets):
     st.title("Análisis de Precios Anuales de Apertura y Cierre de Empresas Tecnológicas")
     st.plotly_chart(fig)
 
+    st.divider()
 
     fig = go.Figure()
-
     # Iterar sobre cada empresa en datasets
     for company, data in datasets.items():
         if 'high' in data.columns and 'low' in data.columns and 'date' in data.columns:
@@ -161,10 +159,9 @@ def Graficas_lineales(datasets):
     st.title("Gráfico de Velas Japonesas de Apertura y Cierre de Empresas Tecnológicas")
     st.plotly_chart(fig)
 
-
+    st.divider()
 
     fig = go.Figure()
-
     # Iterar sobre cada empresa en datasets
     for company, data in datasets.items():
         if 'volume' in data.columns and 'date' in data.columns:
@@ -198,10 +195,9 @@ def Graficas_lineales(datasets):
     st.title("Volumen Anual de Acciones de las Grandes Compañías Tecnológicas")
     st.plotly_chart(fig)
 
-
+    st.divider()
 
     fig = go.Figure()
-
     # Iterar sobre cada empresa en datasets
     for company, data in datasets.items():
         if 'adj_close' in data.columns and 'date' in data.columns:
@@ -234,9 +230,9 @@ def Graficas_lineales(datasets):
     st.title("Ganancias Acumulativas de las Grandes Compañías Tecnológicas")
     st.plotly_chart(fig)
 
+    st.divider()
 
     fig = go.Figure()
-
     # Iterar sobre las empresas en los datasets
     for company, data in datasets.items():
         if 'adj_close' in data.columns and 'date' in data.columns:
@@ -260,7 +256,6 @@ def Graficas_lineales(datasets):
         template='plotly_white',
         font=dict(family='Arial', size=16, color='#023047')
     )
-
     # Mostrar el gráfico en Streamlit
     st.title("Volatibilidad Mensual de las Grandes Compañias Tecnológicas")
     st.plotly_chart(fig)
