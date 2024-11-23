@@ -122,7 +122,7 @@ sony_df.reset_index(drop=True, inplace=True)
 ibm_df.reset_index(drop=True, inplace=True)
 
 datasets = {'Samsung': samsung_df, 'Apple': apple_df, 'Amazon': amazon_df, 'Microsotf':microsoft_df, 'Nvidia': nvidia_df, 'Google': google_df, 'Sony': sony_df, 'IBM': ibm_df}
-##########################################################
+
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
@@ -135,7 +135,7 @@ if selected == 'Estadísticas Descriptivas':
     Estadisticas(datasets)
 
 if selected == 'Datasets':
-    Datasets(samsung_df,apple_df)
+    Datasets(samsung_df, apple_df, amazon_df, microsoft_df, nvidia_df, google_df, sony_df, ibm_df)
 
 if selected == 'Matrices de Correlación':
     Correlacion(datasets)
