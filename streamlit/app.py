@@ -191,3 +191,38 @@ for company, data in datasets.items():
     st.subheader(f"Matriz de Correlación: {company}")
     st.pyplot(fig)
     
+    combined_data = pd.DataFrame()
+###################################
+# Encabezado de la aplicación
+st.title("Análisis de Correlación Global entre Empresas")
+
+# Combinar los precios ajustados de cierre en un solo DataFrame
+st.header("Generando Datos Combinados")
+combined_data = pd.DataFrame()
+combined_data = combined_data.dropna()
+
+for company, data in datasets.items():
+    data['date'] = pd.to_datetime(data['date'])
+    data = data.set_index('date')  # Asegurar que las fechas sean el índice
+    combined_data[company] = data['volume']  # Agregar la columna adj_close por empresa
+
+# Mostrar datos combinados si el usuario lo desea
+if st.checkbox("Mostrar datos combinados"):
+    st.write(combined_data)
+
+# Eliminar fechas donde falten datos para alguna empresa
+combined_data.dropna(inplace=True)
+
+# Calcular la matriz de correlación
+correlation_matrix = combined_data.corr()
+
+# Visualizar la matriz de correlación
+st.header("Matriz de Correlación entre el Volumen de las Compañías")
+fig, ax = plt.subplots(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='magma', fmt=".2f", linewidths=0.5, ax=ax)
+ax.set_title("Matriz de Correlación entre el Volumen de las Compañías", fontsize=16)
+
+# Renderizar la gráfica en Streamlit
+st.pyplot(fig)
+
+
