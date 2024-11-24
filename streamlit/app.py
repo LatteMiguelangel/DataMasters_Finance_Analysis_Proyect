@@ -1,7 +1,6 @@
 import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
-from views.Estadisticas import Estadisticas
 from views.Datasets import Datasets
 from views.Correlacion import Correlacion
 from views.Graficas_lineales import Graficas_lineales
@@ -121,18 +120,15 @@ google_df.reset_index(drop=True, inplace=True)
 sony_df.reset_index(drop=True, inplace=True)
 ibm_df.reset_index(drop=True, inplace=True)
 
-datasets = {'Samsung': samsung_df, 'Apple': apple_df, 'Amazon': amazon_df, 'Microsotf':microsoft_df, 'Nvidia': nvidia_df, 'Google': google_df, 'Sony': sony_df, 'IBM': ibm_df}
+datasets = {'Samsung': samsung_df, 'Apple': apple_df, 'Amazon': amazon_df, 'Microsoft':microsoft_df, 'Nvidia': nvidia_df, 'Google': google_df, 'Sony': sony_df, 'IBM': ibm_df}
 datasets = dict(sorted(datasets.items(), key=lambda item: item[0]))
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
-        options=['Datasets', 'Estadísticas Descriptivas', 'Matrices de Correlación', 'Graficas Lineales'],
+        options=['Datasets', 'Matrices de Correlación', 'Graficas Lineales'],
         menu_icon='cast',
         default_index=0
     )
-
-if selected == 'Estadísticas Descriptivas':
-    Estadisticas(datasets)
 
 if selected == 'Datasets':
     Datasets(datasets)
