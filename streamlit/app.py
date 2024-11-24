@@ -3,22 +3,10 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from views.Datasets import Datasets
 from views.Comparativa import Comparativa
+from config import config
 import openpyxl
 
-st.set_page_config(
-    page_title="Big Tech Stock Analysis",
-    page_icon="📊",
-    layout="centered"
-)
-
-hide_streamlit_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+config() #configuracion streamlit
 
 #lectura de datasets
 samsung_df = pd.read_csv('data/raw/SSNG.csv', delimiter=',')
