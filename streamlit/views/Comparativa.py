@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 import pandas as pd
 import streamlit as st
-def Graficas_lineales(datasets):
+def Comparativa(datasets):
     # Colores para cada empresa
     colors = {
         'Sony': '#1428A0',  

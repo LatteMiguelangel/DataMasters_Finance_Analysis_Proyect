@@ -2,11 +2,11 @@ import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
 from views.Datasets import Datasets
-from views.Graficas_lineales import Graficas_lineales
+from views.Comparativa import Comparativa
 import openpyxl
 
 st.set_page_config(
-    page_title="Data Analysis",
+    page_title="Big Tech Stock Analysis",
     page_icon="📊",
     layout="centered"
 )
@@ -19,7 +19,6 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
 
 #lectura de datasets
 samsung_df = pd.read_csv('data/raw/SSNG.csv', delimiter=',')
@@ -124,12 +123,12 @@ datasets = dict(sorted(datasets.items(), key=lambda item: item[0]))
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
-        options=['Datasets', 'Graficas Lineales'],
+        options=['Datasets', 'Comparativa Global'],
         menu_icon='cast',
-        default_index=0
+        default_index=0     
     )
 
 if selected == 'Datasets':
     Datasets(datasets)
-if selected == 'Graficas Lineales':
-    Graficas_lineales(datasets)
+if selected == 'Comparativa Global':
+    Comparativa(datasets)
