@@ -22,10 +22,10 @@ def Datasets(datasets):
     # Colores para cada empresa
     colors = {
         'Sony': '#1428A0',  
-        'IBM': '#6c3483', 
+        'IBM': '#F180E6', 
         'Google': '#FBBC05', 
         'Microsoft': '#A51C30', 
-        'Amazon': '#FF9900', 
+        'Amazon': '#F44611', 
         'Nvidia': '#76B900', 
         'Samsung': '#4285F4',
         'Apple': '#B5B5B5'
@@ -76,7 +76,22 @@ def Datasets(datasets):
     st.dataframe(filtered_df.sort_values('date', ascending=True))
     
     st.divider()
-    linear_graphs(filtered_df, company_name, colors[company_name])  # Pasar el color correspondiente
+
+    # Diccionario para las columnas a graficar
+    columns_to_plot = {
+        'open': 'Precio de Apertura',
+        'high': 'Precio más Alto',
+        'low': 'Precio más Bajo',
+        'close': 'Precio de Cierre',
+        'adj_close': 'Cierre Ajustado',
+        'volume': 'Volumen'
+    }
+    
+    # Selección de columna para graficar
+    selected_column_key = st.selectbox("Selecciona el campo a visualizar:", list(columns_to_plot.keys()), format_func=lambda x: columns_to_plot[x])
+
+    # Gráfico lineal
+    linear_graphs(filtered_df, company_name, selected_column_key, colors[company_name], columns_to_plot)  # Pasar el color correspondiente
 
     # Calcular estadísticas descriptivas
     stats = filtered_df.drop(columns=['date']).dropna().describe()
@@ -90,16 +105,16 @@ def Datasets(datasets):
 
     with tabs[1]:
         fig_box = go.Figure()
-        fig_box.add_trace(go.Box(y=filtered_df['close'], name='Precio de Cierre'))
-        fig_box.update_layout(title=f"Distribución del Precio de Cierre de {company_name}",
-                            yaxis_title="Precio (USD)")
+        fig_box.add_trace(go.Box(y=filtered_df[selected_column_key], name=columns_to_plot[selected_column_key], marker_color=colors[company_name]))  # Usar el color
+        fig_box.update_layout(title=f"Distribución de {columns_to_plot[selected_column_key]} de {company_name}",
+                            yaxis_title=columns_to_plot[selected_column_key])
         st.plotly_chart(fig_box)
 
     with tabs[2]:
         fig_hist = go.Figure()
-        fig_hist.add_trace(go.Histogram(x=filtered_df['close'], nbinsx=30))
-        fig_hist.update_layout(title=f"Histograma del Precio de Cierre de {company_name}",
-                            xaxis_title="Precio (USD)",
+        fig_hist.add_trace(go.Histogram(x=filtered_df[selected_column_key], nbinsx=30, marker_color=colors[company_name]))  # Usar el color
+        fig_hist.update_layout(title=f"Histograma de {columns_to_plot[selected_column_key]} de {company_name}",
+                            xaxis_title=columns_to_plot[selected_column_key],
                             yaxis_title="Frecuencia")
         st.plotly_chart(fig_hist)
 
@@ -108,14 +123,13 @@ def Datasets(datasets):
     numeric_data = filtered_df.select_dtypes(include='number')
     display_correlation(numeric_data, company_name)
 
-def linear_graphs(data, title, color):
+def linear_graphs(data, title, selected_column, color, columns_to_plot):
     # Gráfico de precios a lo largo del tiempo
     fig = go.Figure()
-    st.markdown(f"### Gráfico de Precios de Cierre de {title}")
-    fig.add_trace(go.Scatter(x=data['date'], y=data['close'], mode='lines', name='Precio de Cierre', line=dict(color=color)))  # Usar el color
-    fig.update_layout(title=f"Precio de Cierre de {title}",
+    fig.add_trace(go.Scatter(x=data['date'], y=data[selected_column], mode='lines', name=columns_to_plot[selected_column], line=dict(color=color)))  # Usar el color
+    fig.update_layout(title=f"{columns_to_plot[selected_column]} de {title}",  # Usar el valor en español
                     xaxis_title="Fecha",
-                    yaxis_title="Precio (USD)",
+                    yaxis_title=columns_to_plot[selected_column],
                     xaxis_rangeslider_visible=True)
     st.plotly_chart(fig)
 

@@ -2,7 +2,17 @@ import plotly.graph_objects as go
 import pandas as pd
 import streamlit as st
 def Graficas_lineales(datasets):
-    
+    # Colores para cada empresa
+    colors = {
+        'Sony': '#1428A0',  
+        'IBM': '#F180E6', 
+        'Google': '#FBBC05', 
+        'Microsoft': '#A51C30', 
+        'Amazon': '#F44611', 
+        'Nvidia': '#76B900', 
+        'Samsung': '#4285F4',
+        'Apple': '#B5B5B5'
+    }
     # Función para convertir colores HEX a RGBA con opacidad
     def hex_to_rgba(hex_color, alpha=1.0):
         hex_color = hex_color.lstrip('#')

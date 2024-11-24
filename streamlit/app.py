@@ -2,7 +2,6 @@ import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
 from views.Datasets import Datasets
-from views.Correlacion import Correlacion
 from views.Graficas_lineales import Graficas_lineales
 import openpyxl
 
@@ -125,16 +124,12 @@ datasets = dict(sorted(datasets.items(), key=lambda item: item[0]))
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
-        options=['Datasets', 'Matrices de Correlación', 'Graficas Lineales'],
+        options=['Datasets', 'Graficas Lineales'],
         menu_icon='cast',
         default_index=0
     )
 
 if selected == 'Datasets':
     Datasets(datasets)
-
-if selected == 'Matrices de Correlación':
-    Correlacion(datasets)
-
 if selected == 'Graficas Lineales':
     Graficas_lineales(datasets)
