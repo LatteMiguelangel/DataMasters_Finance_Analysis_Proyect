@@ -3,7 +3,7 @@ import streamlit as st
 def config():
     st.set_page_config(
         page_title="Big Tech Stocks Analysis",
-        page_icon="📈",
+        page_icon="🖥",
         layout="centered",
         initial_sidebar_state="expanded"
     )
