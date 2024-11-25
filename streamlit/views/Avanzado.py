@@ -4,7 +4,7 @@ import pandas as pd
 import streamlit as st
 
 def Avanzado(datasets):
-    st.title("📊 Análisis Avanzado de Big Tech")
+    st.title("📊 Análisis Avanzado de las Empresas Big Tech")
     st.markdown(
         """
         Este análisis incluye visualizaciones interactivas avanzadas para explorar:
