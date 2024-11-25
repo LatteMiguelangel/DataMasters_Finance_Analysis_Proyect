@@ -29,6 +29,7 @@ def Comparativa(datasets):
         Bienvenido al panel de análisis interactivo. Aquí encontrarás un análisis visual detallado de las principales métricas de las grandes empresas tecnológicas:
         
         - **Gráfico de Velas Japonesas**: Visualización de máximos y mínimos anuales.
+        - **Gráfico Lineal del Volumen Anual**: Comportamiento del volumen de transacciones entre las compañías.
         - **Ganancias Acumulativas**: Seguimiento del rendimiento de las acciones a lo largo del tiempo.
         - **Volatilidad Mensual**: Medida de la estabilidad de las acciones.
         - **Matriz de Correlación**: Relación entre las métricas seleccionadas de las compañías.
@@ -84,7 +85,47 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 2: Ganancias Acumulativas ###
+    ### GRÁFICO 2: Volumen Anual ###
+    st.subheader("📊 Gráfico Lineal del Volumen Anual")
+    st.markdown(
+        """
+        Este gráfico muestra el volumen total anual de transacciones para cada empresa, permitiendo analizar el comportamiento del mercado.
+        """
+    )
+
+    fig = go.Figure()
+
+    for company, data in datasets.items():
+        if 'volume' in data.columns and 'date' in data.columns:
+            # Convertir la columna de fechas
+            data['date'] = pd.to_datetime(data['date'])
+            
+            # Calcular el volumen total anual
+            yearly_volume = data.groupby(data['date'].dt.year)['volume'].sum()
+
+            # Añadir traza al gráfico
+            fig.add_trace(go.Scatter(
+                x=yearly_volume.index,
+                y=yearly_volume,
+                mode="lines+markers",
+                name=f'{company}',
+                line=dict(color=colors.get(company, '#636EFA')),  # Color único
+                marker=dict(size=8)  # Tamaño de los puntos
+            ))
+
+    fig.update_layout(
+        title="Volumen Total Anual de Transacciones entre las Grandes Compañías Tecnológicas",
+        xaxis_title='Año',
+        yaxis_title='Volumen (en unidades)',
+        legend_title='Compañías',
+        template='plotly_white',
+        font=dict(family='Arial', size=16, color='#023047')
+    )
+
+    st.plotly_chart(fig)
+    st.divider()
+
+    ### GRÁFICO 3: Ganancias Acumulativas ###
     st.subheader("📈 Ganancias Acumulativas")
     st.markdown(
         """
@@ -123,7 +164,7 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 3: Volatilidad ###
+    ### GRÁFICO 4: Volatilidad ###
     st.subheader("🚩 Volatilidad")
     st.markdown(
         """
@@ -157,7 +198,7 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 4: Matriz de Correlación entre Compañías ###
+    ### GRÁFICO 5: Matriz de Correlación entre Compañías ###
     st.subheader("📊 Matriz de Correlación entre Compañías")
     st.markdown(
         """
