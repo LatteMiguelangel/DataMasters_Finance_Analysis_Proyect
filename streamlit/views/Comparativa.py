@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import plotly.express as px
 import pandas as pd
 import streamlit as st
 
@@ -30,6 +31,7 @@ def Comparativa(datasets):
         - **Gráfico de Velas Japonesas**: Visualización de máximos y mínimos anuales.
         - **Ganancias Acumulativas**: Seguimiento del rendimiento de las acciones a lo largo del tiempo.
         - **Volatilidad Mensual**: Medida de la estabilidad de las acciones.
+        - **Matriz de Correlación**: Relación entre las métricas seleccionadas de las compañías.
         """
     )
     st.divider()
@@ -119,11 +121,11 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 3: Volatilidad Mensual ###
-    st.subheader("📉 Volatilidad Mensual")
+    ### GRÁFICO 3: Volatilidad ###
+    st.subheader("📉 Volatilidad")
     st.markdown(
         """
-        La volatilidad mensual mide la variación o inestabilidad de los precios de las acciones. Una alta volatilidad puede indicar mayor riesgo y oportunidad en el mercado.
+        La volatilidad mide la variación o inestabilidad de los precios de las acciones. Una alta volatilidad puede indicar mayor riesgo y oportunidad en el mercado.
         """
     )
 
@@ -131,7 +133,6 @@ def Comparativa(datasets):
 
     for company, data in datasets.items():
         if 'adj_close' in data.columns and 'date' in data.columns:
-            # Calcular la volatilidad mensual (desviación estándar de los precios ajustados de cierre)
             volatility = data.groupby(data['date'].dt.to_period('M'))['adj_close'].std()
 
             # Añadir traza al gráfico para cada empresa
@@ -144,11 +145,73 @@ def Comparativa(datasets):
             ))
 
     fig.update_layout(
-        title='Volatilidad Mensual de las Grandes Compañías Tecnológicas',
-        xaxis_title='Mes',
+        title='Volatilidad de las Grandes Compañías Tecnológicas',
+        xaxis_title='Fecha',
         yaxis_title='Desviación Estándar (Volatilidad)',
         template='plotly_white',
         font=dict(family='Arial', size=16, color='#023047')
     )
 
     st.plotly_chart(fig)
+    st.divider()
+
+    ### GRÁFICO 4: Matriz de Correlación entre Compañías ###
+    st.subheader("📊 Matriz de Correlación entre Compañías")
+    st.markdown(
+        """
+        La matriz de correlación muestra la relación entre las métricas seleccionadas de las diferentes empresas tecnológicas.
+        """
+    )
+
+    # Diccionario para mostrar nombres amigables en la vista
+    metric_mapping = {
+        'adj_close': 'Precio Ajustado',
+        'volume': 'Volumen',
+        'high': 'Precio Máximo',
+        'low': 'Precio Mínimo',
+        'open': 'Precio de Apertura',
+        'close': 'Precio de Cierre'
+    }
+
+    # Asumimos que todas las columnas tienen los mismos nombres en los datasets
+    sample_dataset = next(iter(datasets.values()))  # Tomamos el primer dataset como ejemplo
+    available_columns = [col for col in sample_dataset.columns if col != "date"]  # Excluimos la columna 'date'
+
+    # Dropdown para seleccionar la métrica
+    selected_metric_key = st.selectbox(
+        "Selecciona la métrica para calcular la correlación:",
+        available_columns,
+        format_func=lambda x: metric_mapping.get(x, x)  # Mostrar nombres amigables
+    )
+
+    # Crear un dataframe combinado para las correlaciones
+    combined_data = pd.DataFrame()
+
+    for company, data in datasets.items():
+        if selected_metric_key in data.columns and 'date' in data.columns:
+            # Asegurarse de que las fechas sean el índice
+            data['date'] = pd.to_datetime(data['date'])
+            data = data.set_index('date')
+            combined_data[company] = data[selected_metric_key]
+
+    # Calcular la matriz de correlación
+    correlation_matrix = combined_data.corr()
+
+    # Crear el gráfico de la matriz de correlación
+    fig_corr = px.imshow(
+        correlation_matrix,
+        labels=dict(color="Correlación"),
+        x=correlation_matrix.columns,
+        y=correlation_matrix.index,
+        color_continuous_scale="magma",
+        text_auto=".2f",
+        title=f"Matriz de Correlación: {metric_mapping.get(selected_metric_key, selected_metric_key)}"
+    )
+
+    fig_corr.update_layout(
+        font=dict(family='Arial', size=12),
+        margin=dict(l=40, r=40, t=40, b=40),
+        width=800, height=600
+    )
+
+    st.plotly_chart(fig_corr)

@@ -48,11 +48,11 @@ def Datasets(datasets):
     selected_df = datasets[company_name]
 
     # Enlaces adicionales
-    st.markdown(f"**🔗 Enlace al Dataset:** [Acceder al Dataset de {company_name}]({links[company_name]})")
+    st.markdown(f"**🔗 Enlace al Dataset:** {links[company_name]}")
     if company_name == "Samsung":
         st.markdown("###### Enlaces de Conversión USD a KRW:")
-        st.markdown("- [Enlace 1](https://www.kaggle.com/datasets/imtkaggleteam/dollar-vs-asian-currencies)")
-        st.markdown("- [Enlace 2](https://www.kaggle.com/datasets/biokpc/us-korean-exchange-rate)")
+        st.markdown("- https://www.kaggle.com/datasets/imtkaggleteam/dollar-vs-asian-currencies")
+        st.markdown("- https://www.kaggle.com/datasets/biokpc/us-korean-exchange-rate")
 
     # Mostrar información del dataset
     st.markdown(f"### 📋 Información del Dataset de {company_name}")

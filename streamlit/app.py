@@ -3,6 +3,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 from views.Datasets import Datasets
 from views.Comparativa import Comparativa
+from views.Avanzado import Avanzado
 from config import config
 import openpyxl
 
@@ -111,7 +112,7 @@ datasets = dict(sorted(datasets.items(), key=lambda item: item[0]))
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
-        options=['Datasets', 'Comparativa Global'],
+        options=['Datasets', 'Comparativa Global', 'Analisis Avanzado'],
         menu_icon='cast',
         default_index=0     
     )
@@ -120,3 +121,5 @@ if selected == 'Datasets':
     Datasets(datasets)
 if selected == 'Comparativa Global':
     Comparativa(datasets)
+if selected == 'Analisis Avanzado':
+    Avanzado(datasets)
