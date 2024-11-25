@@ -112,7 +112,7 @@ datasets = dict(sorted(datasets.items(), key=lambda item: item[0]))
 with st.sidebar:
     selected = option_menu(
         menu_title='Menu',
-        options=['Datasets', 'Comparativa Global', 'Analisis Avanzado'],
+        options=['Datasets', 'Comparativa Global', 'Comparativa Avanzada'],
         menu_icon='cast',
         default_index=0     
     )
@@ -121,5 +121,5 @@ if selected == 'Datasets':
     Datasets(datasets)
 if selected == 'Comparativa Global':
     Comparativa(datasets)
-if selected == 'Analisis Avanzado':
+if selected == 'Comparativa Avanzada':
     Avanzado(datasets)
