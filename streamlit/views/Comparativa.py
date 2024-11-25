@@ -37,7 +37,7 @@ def Comparativa(datasets):
     st.divider()
 
     ### GRÁFICO 1: Velas Japonesas ###
-    st.subheader("📈 Gráfico de Velas Japonesas")
+    st.subheader("🕯️ Gráfico de Velas Japonesas")
     st.markdown(
         """
         El gráfico de velas japonesas muestra las fluctuaciones de precios máximos y mínimos anuales de las acciones de las empresas cargadas.
@@ -54,14 +54,16 @@ def Comparativa(datasets):
             # Cálculo de los máximos y mínimos anuales
             yearly_high = data.groupby(data['date'].dt.year)['high'].max()
             yearly_low = data.groupby(data['date'].dt.year)['low'].min()
+            yearly_open = data.groupby(data['date'].dt.year)['open'].first()
+            yearly_close = data.groupby(data['date'].dt.year)['close'].last()
 
             # Crear el gráfico de velas usando solo high y low
             fig.add_trace(go.Candlestick(
                 x=yearly_high.index,
-                open=yearly_high,  # Usamos 'high' como valor de apertura
-                high=yearly_high,  # También como valor más alto
-                low=yearly_low,    # Usamos 'low' como valor mínimo
-                close=yearly_low,  # Y como valor de cierre
+                open=yearly_open,  
+                high=yearly_high,  
+                low=yearly_low,    
+                close=yearly_close,  
                 name=f'{company}',
                 increasing_line_color=colors.get(company, '#000000'),
                 decreasing_line_color=hex_to_rgba(colors.get(company, '#000000'), 0.6),
@@ -122,7 +124,7 @@ def Comparativa(datasets):
     st.divider()
 
     ### GRÁFICO 3: Volatilidad ###
-    st.subheader("📉 Volatilidad")
+    st.subheader("🚩 Volatilidad")
     st.markdown(
         """
         La volatilidad mide la variación o inestabilidad de los precios de las acciones. Una alta volatilidad puede indicar mayor riesgo y oportunidad en el mercado.

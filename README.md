@@ -1,8 +1,8 @@
-# Análisis Financiero: Samsung vs Apple
+# Big Tech Stoks Data Analysis
 
 ## Descripción
 
-Este proyecto analiza las tendencias de precios de las acciones de Samsung y Apple, comparando datos históricos y generando visualizaciones interactivas con Streamlit.
+Este proyecto analiza las tendencias de precios de las acciones de grandes compañías de tecnología, comparando datos históricos y generando visualizaciones interactivas con Streamlit.
 
 ## Requisitos
 
@@ -12,9 +12,7 @@ Este proyecto analiza las tendencias de precios de las acciones de Samsung y App
 ## Estructura de Archivos `carpetas/`
 
 - `data/`: Datos originales y procesados (NO TOCAR).
-- `scripts/`: Scripts de análisis y visualización.
 - `streamlit/`: Aplicación interactiva.
-- `notebooks/`: Notebooks para exploración de datos y pruebas.
 
 ## Ejecución
 

@@ -73,7 +73,7 @@ def Datasets(datasets):
     st.divider()
 
     # Selección de columna para graficar
-    st.markdown("### 📊 Visualización de Datos")
+    st.markdown("### 📌 Visualización de Datos")
     columns_to_plot = {
         'open': 'Precio de Apertura',
         'high': 'Precio más Alto',
@@ -150,7 +150,7 @@ def Datasets(datasets):
     st.divider()
 
     # Matriz de correlación
-    st.markdown("### 📈 Matriz de Correlación")
+    st.markdown("### 🖇️ Matriz de Correlación")
     numeric_data = filtered_df.select_dtypes(include='number')
     display_correlation(numeric_data, company_name)
 
