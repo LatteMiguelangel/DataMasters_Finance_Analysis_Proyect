@@ -258,7 +258,7 @@ def Avanzado(datasets):
                 st.plotly_chart(heatmap_volumen)
             else:
                 st.subheader(f"📈 Heatmap de Precio Ajustado (%) para {selected_company_heatmap}")
-                heatmap_precio = crear_heatmap(price_by_month, "Cambio del Precio Ajustado (%)", "RdYlGn")
+                heatmap_precio = crear_heatmap(price_by_month, "Cambio del Precio Ajustado (%)", "Oranges")
                 st.plotly_chart(heatmap_precio)
                 
                 
@@ -306,3 +306,65 @@ def Avanzado(datasets):
             - **Colores claros**: Indican períodos con un menor porcentaje del volumen total anual.
             """
         )
+    st.divider()
+        ### SCATTERPLOT MATRIX: Relaciones Cruzadas ###
+    st.subheader("📈 Scatterplot Matrix: Relaciones Cruzadas entre Variables")
+    st.markdown(
+        """
+        Esta matriz de dispersión muestra las relaciones cruzadas entre diferentes variables financieras, como:
+        - **Precio Ajustado (adj_close)**.
+        - **Volumen (volume)**.
+        - **Precio de Apertura (open)**.
+        
+        Permite identificar correlaciones y patrones entre estas variables.
+        """
+    )
+
+    # Selección de compañía para el Scatterplot Matrix
+    selected_company_scatter = st.selectbox(
+        "Selecciona una compañía para analizar las relaciones cruzadas:",
+        datasets.keys(),
+        key="scatter_company_select"
+    )
+
+    if selected_company_scatter:
+        data = datasets[selected_company_scatter]
+        if all(col in data.columns for col in ['adj_close', 'volume', 'open']):
+            # Normalización de las fechas
+            data['date'] = pd.to_datetime(data['date'])
+
+            # Filtrar columnas relevantes
+            scatter_data = data[['adj_close', 'volume', 'open']].copy()
+
+            # Crear la matriz de dispersión
+            scatter_matrix = px.scatter_matrix(
+                scatter_data,
+                dimensions=['adj_close', 'volume', 'open'],
+                labels={
+                    "adj_close": "Precio Ajustado",
+                    "volume": "Volumen",
+                    "open": "Precio de Apertura"
+                },
+                title=f"Scatterplot Matrix para {selected_company_scatter}",
+                color_discrete_sequence=[colors.get(selected_company_scatter, '#636EFA')],
+                template="plotly_white"
+            )
+
+            scatter_matrix.update_layout(
+                font=dict(family='Arial', size=14, color='#023047'),
+                title_font_size=16,
+                width=800,
+                height=800
+            )
+
+            # Mostrar la gráfica en Streamlit
+            st.plotly_chart(scatter_matrix)
+
+            st.markdown(
+                """
+                **¿Cómo leer el Scatterplot Matrix?**
+                - Cada celda representa una relación entre dos variables.
+                - **Tendencias lineales o curvas:** Indican correlaciones positivas o negativas.
+                - **Distribución diagonal:** Muestra la distribución de cada variable.
+                """
+            )
