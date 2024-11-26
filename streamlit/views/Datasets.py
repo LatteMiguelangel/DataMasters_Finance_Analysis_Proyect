@@ -67,14 +67,6 @@ def Datasets(datasets):
         [selected_df['date'].min().date(), selected_df['date'].max().date()]
     )
 
-    # Selector de rango de fechas
-    st.markdown("### 📅 Selección de Rango de Fechas")
-    start_date, end_date = st.date_input(
-        "Selecciona el rango de fechas:",
-        [selected_df['date'].min().date(), selected_df['date'].max().date()],
-        key="date_range_selector"  # Clave única para este widget
-    )
-
     # Restricciones de fechas
     min_start_date = pd.Timestamp("2000-02-01")
     max_end_date = pd.Timestamp("2022-05-23")
