@@ -66,10 +66,36 @@ def Datasets(datasets):
         "Selecciona el rango de fechas:",
         [selected_df['date'].min().date(), selected_df['date'].max().date()]
     )
-    start_date = pd.to_datetime(start_date)
-    end_date = pd.to_datetime(end_date)
-    filtered_df = selected_df[(selected_df['date'] >= start_date) & (selected_df['date'] <= end_date)]
-    st.dataframe(filtered_df.sort_values('date', ascending=True))
+
+    # Selector de rango de fechas
+    st.markdown("### 📅 Selección de Rango de Fechas")
+    start_date, end_date = st.date_input(
+        "Selecciona el rango de fechas:",
+        [selected_df['date'].min().date(), selected_df['date'].max().date()],
+        key="date_range_selector"  # Clave única para este widget
+    )
+
+    # Restricciones de fechas
+    min_start_date = pd.Timestamp("2000-02-01")
+    max_end_date = pd.Timestamp("2022-05-23")
+
+    # Convertir las fechas seleccionadas a pd.Timestamp para asegurar la compatibilidad
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
+
+    # Validaciones de rango de fechas
+    if start_date > end_date:
+        st.warning("⚠️ La fecha de inicio no puede ser mayor que la fecha de fin. Por favor, ajusta el rango.")
+    elif start_date < min_start_date:
+        st.warning(f"⚠️ La fecha de inicio no puede ser anterior al {min_start_date.date()}.")
+    elif end_date > max_end_date:
+        st.warning(f"⚠️ La fecha de fin no puede ser posterior al {max_end_date.date()}.")
+    else:
+        # Filtrar datos por rango de fechas válido
+        filtered_df = selected_df[(selected_df['date'] >= start_date) & (selected_df['date'] <= end_date)]
+
+        # Mostrar el dataframe filtrado
+        st.dataframe(filtered_df.sort_values('date', ascending=True))
     st.divider()
 
     # Selección de columna para graficar
