@@ -28,53 +28,6 @@ def Avanzado(datasets):
         'Apple': '#B5B5B5'
     }
 
-    ### GRÁFICO 1: Volúmenes Anuales (Barras Apiladas) ###
-    st.subheader("📊 Volúmenes Anuales de Todas las Compañías")
-    st.markdown(
-        """
-        Este gráfico muestra el volumen anual total de transacciones para cada compañía, apilado para observar la contribución relativa de cada empresa.
-        """
-    )
-
-    # Crear un DataFrame combinado para los volúmenes anuales
-    volume_data = pd.DataFrame()
-
-    for company, data in datasets.items():
-        if 'volume' in data.columns and 'date' in data.columns:
-            data['date'] = pd.to_datetime(data['date'])
-            yearly_volume = data.groupby(data['date'].dt.year)['volume'].sum()
-            volume_data[company] = yearly_volume
-
-    volume_data.index.name = "Año"
-    volume_data.reset_index(inplace=True)
-
-    # Crear el gráfico de barras apiladas
-    fig_volume = px.bar(
-        volume_data,
-        x="Año",
-        y=volume_data.columns[1:],  # Excluir la columna de años
-        title="Volúmenes Anuales de Transacciones (Barras Apiladas)",
-        labels={"value": "Volumen", "variable": "Compañías"},
-        color_discrete_map=colors
-    )
-
-    fig_volume.update_layout(
-        barmode='stack',
-        template='plotly_white',
-        font=dict(family='Arial', size=16, color='#023047'),
-        xaxis_title="Año",
-        yaxis_title="Volumen Total (en unidades)"
-    )
-    st.plotly_chart(fig_volume)
-    st.markdown(
-    """
-    **¿Cómo leer el Gráfico?**
-    - **Barras más altas:** Indican años con mayor volumen de transacciones en general.
-    - **Segmentos de color:** Representan la proporción del volumen total que corresponde a cada compañía en un año determinado.
-    """
-    )
-    st.divider()
-
     ### GRÁFICO 2: Distribución de Precios Ajustados (Diagrama de Violín) ###
     st.subheader("🎻 Distribución de Precios Ajustados de Cada Compañía")
     st.markdown(

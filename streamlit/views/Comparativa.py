@@ -85,44 +85,51 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 2: Volumen Anual ###
-    st.subheader("📊 Gráfico Lineal del Volumen Anual")
+    ### GRÁFICO Volúmenes Anuales (Barras Apiladas) ###
+    st.subheader("📊 Volúmenes Anuales de Todas las Compañías")
     st.markdown(
         """
-        Este gráfico muestra el volumen total anual de transacciones para cada empresa, permitiendo analizar el comportamiento del mercado.
+        Este gráfico muestra el volumen anual total de transacciones para cada compañía, apilado para observar la contribución relativa de cada empresa.
         """
     )
 
-    fig = go.Figure()
+    # Crear un DataFrame combinado para los volúmenes anuales
+    volume_data = pd.DataFrame()
 
     for company, data in datasets.items():
         if 'volume' in data.columns and 'date' in data.columns:
-            # Convertir la columna de fechas
             data['date'] = pd.to_datetime(data['date'])
-            
-            # Calcular el volumen total anual
             yearly_volume = data.groupby(data['date'].dt.year)['volume'].sum()
+            volume_data[company] = yearly_volume
 
-            # Añadir traza al gráfico
-            fig.add_trace(go.Scatter(
-                x=yearly_volume.index,
-                y=yearly_volume,
-                mode="lines+markers",
-                name=f'{company}',
-                line=dict(color=colors.get(company, '#636EFA')),  # Color único
-                marker=dict(size=8)  # Tamaño de los puntos
-            ))
+    volume_data.index.name = "Año"
+    volume_data.reset_index(inplace=True)
 
-    fig.update_layout(
-        title="Volumen Total Anual de Transacciones entre las Grandes Compañías Tecnológicas",
-        xaxis_title='Año',
-        yaxis_title='Volumen (en unidades)',
-        legend_title='Compañías',
-        template='plotly_white',
-        font=dict(family='Arial', size=16, color='#023047')
+    # Crear el gráfico de barras apiladas
+    fig_volume = px.bar(
+        volume_data,
+        x="Año",
+        y=volume_data.columns[1:],  # Excluir la columna de años
+        title="Volúmenes Anuales de Transacciones (Barras Apiladas)",
+        labels={"value": "Volumen", "variable": "Compañías"},
+        color_discrete_map=colors
     )
 
-    st.plotly_chart(fig)
+    fig_volume.update_layout(
+        barmode='stack',
+        template='plotly_white',
+        font=dict(family='Arial', size=16, color='#023047'),
+        xaxis_title="Año",
+        yaxis_title="Volumen Total (en unidades)"
+    )
+    st.plotly_chart(fig_volume)
+    st.markdown(
+    """
+    **¿Cómo leer el Gráfico?**
+    - **Barras más altas:** Indican años con mayor volumen de transacciones en general.
+    - **Segmentos de color:** Representan la proporción del volumen total que corresponde a cada compañía en un año determinado.
+    """
+    )
     st.divider()
 
     ### GRÁFICO 3: Ganancias Acumulativas ###
