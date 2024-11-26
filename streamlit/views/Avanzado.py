@@ -1,4 +1,5 @@
 import plotly.graph_objects as go
+import plotly.figure_factory as ff
 import plotly.express as px
 import pandas as pd
 import streamlit as st
@@ -9,9 +10,9 @@ def Avanzado(datasets):
         """
         Este análisis incluye visualizaciones interactivas avanzadas para explorar:
         
-        - **Comparación de volúmenes anuales**: Gráfico de Barras Apiladas.
         - **Distribución de precios ajustados**: Diagrama de Violín.
         - **Identificación de outliers**: Bandas de Bollinger.
+        - **Análisis temporal avanzado**: Heatmaps de Volumen y Precio Ajustado.
         """
     )
     st.divider()
@@ -172,3 +173,136 @@ def Avanzado(datasets):
                 Son un indicador técnico que utiliza una media móvil y desviaciones estándar para crear bandas alrededor del precio de un activo. Estas bandas pueden ayudar a identificar sobrecompra o sobreventa, así como a detectar posibles puntos de entrada        o salida.
                 """
             )
+    st.divider()
+    ### HEATMAPS: Análisis Temporal Avanzado ###
+    st.subheader("📆 Heatmaps de Análisis Temporal")
+    st.markdown(
+        """
+        Los heatmaps permiten visualizar tendencias temporales:
+        
+        - **Volumen (%)**: Identifica periodos con mayor actividad de volumen.
+        - **Precio Ajustado (%)**: Observa periodos con cambios significativos en el precio ajustado.
+        """
+    )
+
+    # Selección de compañía para el heatmap
+    selected_company_heatmap = st.selectbox(
+        "Selecciona una compañía para los heatmaps:",
+        datasets.keys()
+    )
+
+    if selected_company_heatmap:
+        data = datasets[selected_company_heatmap]
+        if 'adj_close' in data.columns and 'volume' in data.columns and 'date' in data.columns:
+            data['date'] = pd.to_datetime(data['date'])
+            data['year'] = data['date'].dt.year
+            data['month'] = data['date'].dt.month
+
+            # Filtrar datos entre 2000 y 2022
+            data = data[(data['year'] >= 2000) & (data['year'] <= 2022)]
+
+            # Calcular % volumen mensual
+            volume_by_month = (
+                data.groupby(['year', 'month'])['volume']
+                .sum()
+                .unstack(fill_value=0)
+                .reset_index()
+            )
+            volume_normalized = volume_by_month.set_index('year')
+            volume_normalized = volume_normalized.div(volume_normalized.sum().sum()) * 100
+
+            # Calcular % cambio del precio ajustado
+            data['price_change'] = data['adj_close'].pct_change() * 100
+            price_by_month = (
+                data.groupby(['year', 'month'])['price_change']
+                .mean()
+                .unstack(fill_value=0)
+                .reset_index()
+            )
+            price_by_month = price_by_month.set_index('year')
+
+            # Función para crear heatmaps anotados
+            def crear_heatmap(datos, titulo, esquema_colores):
+                datos_annot = datos.fillna(0).round(2)
+                z = datos_annot.values
+                x = [f"{i:02d}" for i in datos.columns]  # Meses
+                y = datos.index.astype(str).tolist()  # Convertir el índice en una lista de strings
+            
+                # Crear heatmap con anotaciones
+                fig = ff.create_annotated_heatmap(
+                    z=z,
+                    x=x,
+                    y=y,
+                    colorscale=esquema_colores,
+                    annotation_text=datos_annot.values.astype(str),
+                    showscale=True
+                )
+                fig.update_layout(
+                    title=titulo,
+                    xaxis=dict(title="Mes"),
+                    yaxis=dict(title="Año"),
+                    width=800,
+                    height=600,
+                )
+                return fig
+
+            # Selección del tipo de heatmap
+            heatmap_option = st.radio(
+                "Selecciona el tipo de heatmap:",
+                ["Volumen (%)", "Precio Ajustado (%)"]
+            )
+
+            if heatmap_option == "Volumen (%)":
+                st.subheader(f"📊 Heatmap de Volumen (%) para {selected_company_heatmap}")
+                heatmap_volumen = crear_heatmap(volume_normalized, "Porcentaje de Volumen (%)", "Blues")
+                st.plotly_chart(heatmap_volumen)
+            else:
+                st.subheader(f"📈 Heatmap de Precio Ajustado (%) para {selected_company_heatmap}")
+                heatmap_precio = crear_heatmap(price_by_month, "Cambio del Precio Ajustado (%)", "RdYlGn")
+                st.plotly_chart(heatmap_precio)
+                
+                
+        st.divider()
+        # Preparación de los datos para el Heatmap Global (Porcentual)
+        st.subheader("📈 Heatmap Global Porcentual de Volúmenes de Big Tech")
+        st.markdown(
+            """
+            Este heatmap muestra los momentos del año con mayor actividad en las acciones de las compañías analizadas,
+            en términos **porcentuales**.
+            """
+        )
+        
+        # Preparamos los datos para el heatmap global
+        # Combinar los datos de todas las compañías
+        global_volume_data = pd.DataFrame()
+        
+        for company, data in datasets.items():
+            if 'volume' in data.columns and 'date' in data.columns:
+                data['date'] = pd.to_datetime(data['date'])
+                data['Año'] = data['date'].dt.year
+                data['Mes'] = data['date'].dt.month
+                company_volume = data.groupby(['Año', 'Mes'])['volume'].sum().reset_index()
+                company_volume['Compañía'] = company
+                global_volume_data = pd.concat([global_volume_data, company_volume], ignore_index=True)
+        
+        # Agregar los volúmenes globales por año y mes
+        volume_by_month = global_volume_data.groupby(['Año', 'Mes'])['volume'].sum().unstack(fill_value=0)
+        
+        # Convertir los volúmenes a valores porcentuales por año
+        volume_by_month_percentage = volume_by_month.div(volume_by_month.sum(axis=1), axis=0) * 100
+        
+        # Crear el heatmap porcentual
+        heatmap_volumen = crear_heatmap(
+            volume_by_month_percentage,
+            "Heatmap Global Porcentual de Volúmenes",
+            "Blues"
+        )
+        st.plotly_chart(heatmap_volumen)
+        
+        st.markdown(
+            """
+            **¿Cómo leer el Heatmap?**
+            - **Colores oscuros**: Indican períodos con un mayor porcentaje del volumen total anual.
+            - **Colores claros**: Indican períodos con un menor porcentaje del volumen total anual.
+            """
+        )

@@ -213,7 +213,7 @@ def Comparativa(datasets):
         """
     )
 
-    # Diccionario para mostrar nombres amigables en la vista
+    # Diccionario para mostrar nombres
     metric_mapping = {
         'adj_close': 'Precio Ajustado',
         'volume': 'Volumen',
