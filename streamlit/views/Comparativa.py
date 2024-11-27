@@ -21,8 +21,7 @@ def Comparativa(datasets):
         hex_color = hex_color.lstrip('#')
         r, g, b = tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
         return f'rgba({r}, {g}, {b}, {alpha})'
-
-    # Títulos y descripción inicial de la vista
+    
     st.title("📊 Comparativa General entre las Empresas Big Tech")
     st.markdown(
         """
@@ -37,7 +36,7 @@ def Comparativa(datasets):
     )
     st.divider()
 
-    ### GRÁFICO 1: Velas Japonesas ###
+    ### Velas Japonesas
     st.subheader("🕯️ Gráfico de Velas Japonesas")
     st.markdown(
         """
@@ -49,7 +48,6 @@ def Comparativa(datasets):
 
     for company, data in datasets.items():
         if 'high' in data.columns and 'low' in data.columns and 'date' in data.columns:
-            # Convertir la columna de fechas
             data['date'] = pd.to_datetime(data['date'])
             
             # Cálculo de los máximos y mínimos anuales
@@ -58,7 +56,6 @@ def Comparativa(datasets):
             yearly_open = data.groupby(data['date'].dt.year)['open'].first()
             yearly_close = data.groupby(data['date'].dt.year)['close'].last()
 
-            # Crear el gráfico de velas usando solo high y low
             fig.add_trace(go.Candlestick(
                 x=yearly_high.index,
                 open=yearly_open,  
@@ -85,7 +82,7 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO Volúmenes Anuales (Barras Apiladas) ###
+    ### Volúmenes Anuales (Barras Apiladas)
     st.subheader("📊 Volúmenes Anuales de Todas las Compañías")
     st.markdown(
         """
@@ -93,7 +90,6 @@ def Comparativa(datasets):
         """
     )
 
-    # Crear un DataFrame combinado para los volúmenes anuales
     volume_data = pd.DataFrame()
 
     for company, data in datasets.items():
@@ -132,31 +128,25 @@ def Comparativa(datasets):
     )
     st.divider()
 
-    ### GRÁFICO 3: Ganancias Acumulativas ###
+    ### Ganancias Acumulativas
     st.subheader("📈 Ganancias Acumulativas")
     st.markdown(
         """
         Este gráfico muestra las ganancias acumulativas de las acciones, indicando el rendimiento relativo desde el inicio del período de análisis.
         """
     )
-
     fig = go.Figure()
 
     for company, data in datasets.items():
         if 'adj_close' in data.columns and 'date' in data.columns:
-            # Convertir la columna 'date' a formato datetime si no lo está
             data['date'] = pd.to_datetime(data['date'])
-            
-            # Calcular el rendimiento acumulativo de 'adj_close'
             cumulative_return = data['adj_close'].pct_change().fillna(0).add(1).cumprod()
-
-            # Añadir traza para el rendimiento acumulado de cada empresa
             fig.add_trace(go.Scatter(
                 x=data['date'],
                 y=cumulative_return,
                 mode='lines',
                 name=company,
-                line=dict(color=colors.get(company, None))  # Color único para cada empresa
+                line=dict(color=colors.get(company, None))
             ))
 
     fig.update_layout(
@@ -171,7 +161,7 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 4: Volatilidad ###
+    ### Volatilidad
     st.subheader("🚩 Volatilidad")
     st.markdown(
         """
@@ -185,13 +175,12 @@ def Comparativa(datasets):
         if 'adj_close' in data.columns and 'date' in data.columns:
             volatility = data.groupby(data['date'].dt.to_period('M'))['adj_close'].std()
 
-            # Añadir traza al gráfico para cada empresa
             fig.add_trace(go.Scatter(
                 x=volatility.index.to_timestamp(),  # Convertir el índice de periodo a timestamp
                 y=volatility,
                 mode='lines',
                 name=f'{company}',
-                line=dict(color=colors.get(company, '#636EFA'))  # Asignar color único o predeterminado
+                line=dict(color=colors.get(company, '#636EFA'))
             ))
 
     fig.update_layout(
@@ -205,7 +194,7 @@ def Comparativa(datasets):
     st.plotly_chart(fig)
     st.divider()
 
-    ### GRÁFICO 5: Matriz de Correlación entre Compañías ###
+    ### Matriz de Correlación entre Compañías
     st.subheader("📊 Matriz de Correlación entre Compañías")
     st.markdown(
         """
@@ -244,7 +233,6 @@ def Comparativa(datasets):
             data = data.set_index('date')
             combined_data[company] = data[selected_metric_key]
 
-    # Calcular la matriz de correlación
     correlation_matrix = combined_data.corr()
 
     # Crear el gráfico de la matriz de correlación

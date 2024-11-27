@@ -48,7 +48,6 @@ def Hitos(datasets):
                 filtered_data = pd.concat([filtered_data, filtered])
         return filtered_data
 
-    # Gráfico genérico para evitar duplicación
     def mostrar_grafico(filtered_data, columna, titulo, eje_y):
         if filtered_data.empty:
             st.warning(f"No hay datos disponibles para el evento seleccionado: {selected_event}.")

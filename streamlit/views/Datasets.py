@@ -4,7 +4,6 @@ import plotly.graph_objs as go
 import plotly.express as px
 
 def Datasets(datasets):
-    # Título principal con descripción inicial
     st.title("📊 Análisis de los Datasets de Empresas Big Tech")
     st.markdown(
         """
@@ -70,8 +69,6 @@ def Datasets(datasets):
     # Restricciones de fechas
     min_start_date = pd.Timestamp("2000-02-01")
     max_end_date = pd.Timestamp("2022-05-23")
-
-    # Convertir las fechas seleccionadas a pd.Timestamp para asegurar la compatibilidad
     start_date = pd.Timestamp(start_date)
     end_date = pd.Timestamp(end_date)
 
@@ -83,10 +80,7 @@ def Datasets(datasets):
     elif end_date > max_end_date:
         st.warning(f"⚠️ La fecha de fin no puede ser posterior al {max_end_date.date()}.")
     else:
-        # Filtrar datos por rango de fechas válido
         filtered_df = selected_df[(selected_df['date'] >= start_date) & (selected_df['date'] <= end_date)]
-
-        # Mostrar el dataframe filtrado
         st.dataframe(filtered_df.sort_values('date', ascending=True))
     st.divider()
 

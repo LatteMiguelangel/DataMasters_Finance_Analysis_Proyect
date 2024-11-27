@@ -29,7 +29,7 @@ def Avanzado(datasets):
         'Apple': '#B5B5B5'
     }
 
-    ### GRÁFICO 2: Distribución de Precios Ajustados (Diagrama de Violín) ###
+    ### Distribución de Precios Ajustados (Diagrama de Violín) 
     st.subheader("🎻 Distribución de Precios Ajustados de Cada Compañía")
     st.markdown(
         """
@@ -48,7 +48,6 @@ def Avanzado(datasets):
         if 'adj_close' in data.columns and 'date' in data.columns:
             data['date'] = pd.to_datetime(data['date'])
 
-            # Crear el DataFrame para la compañía seleccionada
             violin_data = pd.DataFrame({
                 "Precio Ajustado": data['adj_close'],
                 "Compañía": selected_company_violin
@@ -60,8 +59,8 @@ def Avanzado(datasets):
                 x="Compañía",
                 y="Precio Ajustado",
                 color="Compañía",
-                box=True,  # Mostrar caja dentro del violín
-                points="all",  # Mostrar todos los puntos
+                box=True,
+                points="all",  
                 title=f"Distribución de Precios Ajustados: {selected_company_violin}",
                 color_discrete_map={selected_company_violin: colors.get(selected_company_violin, '#636EFA')}
             )
@@ -84,7 +83,7 @@ def Avanzado(datasets):
             )
     st.divider()
 
-    ### GRÁFICO 3: Identificación de Outliers (Bandas de Bollinger) ###
+    ### Identificación de Outliers (Bandas de Bollinger)
     st.subheader("🎯 Identificación de Outliers")
     st.markdown(
         """
@@ -92,7 +91,7 @@ def Avanzado(datasets):
         """
     )
 
-    # Selección de compañía para el análisis de Bandas de Bollinger
+    # Selección de compañía
     selected_company_bollinger = st.selectbox(
         "Selecciona una compañía para visualizar las Bandas de Bollinger:",
         datasets.keys()
@@ -112,7 +111,6 @@ def Avanzado(datasets):
             data['Upper Band'] = data['SMA'] + (data['STD'] * 2)
             data['Lower Band'] = data['SMA'] - (data['STD'] * 2)
 
-            # Crear el gráfico de Bandas de Bollinger
             fig_bollinger = go.Figure()
 
             # Precio Ajustado
@@ -174,7 +172,8 @@ def Avanzado(datasets):
                 """
             )
     st.divider()
-    ### HEATMAPS: Análisis Temporal Avanzado ###
+    
+    ### HEATMAPS INDIVIDUALES
     st.subheader("📆 Heatmaps de Análisis Temporal")
     st.markdown(
         """
@@ -221,7 +220,6 @@ def Avanzado(datasets):
             )
             price_by_month = price_by_month.set_index('year')
 
-            # Función para crear heatmaps anotados
             def crear_heatmap(datos, titulo, esquema_colores):
                 datos_annot = datos.fillna(0).round(2)
                 z = datos_annot.values
@@ -263,7 +261,8 @@ def Avanzado(datasets):
                 
                 
         st.divider()
-        # Preparación de los datos para el Heatmap Global (Porcentual)
+        
+        ### HEATMAP GLOBAL
         st.subheader("📈 Heatmap Global Porcentual de Volúmenes de Big Tech")
         st.markdown(
             """
@@ -272,7 +271,6 @@ def Avanzado(datasets):
             """
         )
         
-        # Preparamos los datos para el heatmap global
         # Combinar los datos de todas las compañías
         global_volume_data = pd.DataFrame()
         
@@ -291,7 +289,6 @@ def Avanzado(datasets):
         # Convertir los volúmenes a valores porcentuales por año
         volume_by_month_percentage = volume_by_month.div(volume_by_month.sum(axis=1), axis=0) * 100
         
-        # Crear el heatmap porcentual
         heatmap_volumen = crear_heatmap(
             volume_by_month_percentage,
             "Heatmap Global Porcentual de Volúmenes",
@@ -307,7 +304,8 @@ def Avanzado(datasets):
             """
         )
     st.divider()
-        ### SCATTERPLOT MATRIX: Relaciones Cruzadas ###
+    
+        ### SCATTERPLOT MATRIX
     st.subheader("📈 Scatterplot Matrix: Relaciones Cruzadas entre Variables")
     st.markdown(
         """
@@ -356,8 +354,6 @@ def Avanzado(datasets):
                 width=800,
                 height=800
             )
-
-            # Mostrar la gráfica en Streamlit
             st.plotly_chart(scatter_matrix)
 
             st.markdown(
